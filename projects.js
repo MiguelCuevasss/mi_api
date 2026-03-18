@@ -25,12 +25,12 @@ res.json({ message: 'Bienvenido a la API de Proyectos' });
 });
 
 // GET /projects - Ver todos los proyectos
-app.get('/experience', (req, res) => {
+app.get('/experiences', (req, res) => {
 res.json(experiences);
 });
 
 // GET /projects/:id - Ver un proyecto específico
-app.get('/experience/:id', (req, res) => {
+app.get('/experiences/:id', (req, res) => {
 const experiences = experiences.find(p => p.id === parseInt(req.params.id));
 
 if (!experiences) {
@@ -41,45 +41,45 @@ res.json(experiences);
 });
 
 // POST /projects - Crear un proyecto
-app.post('/experience', (req, res) => {
+app.post('/experiences', (req, res) => {
 const { name, stars } = req.body;
 
 if (!name) {
 return res.status(400).json({ error: 'El campo "name" es requerido' });
 }
 
-const newProject = {
+const newExperiences = {
 id: nextId++,
 name,
 stars: stars || 0,
 };
 
-projects.push(newProject);
-res.status(201).json(newProject);
+experiences.push(newExperiences);
+res.status(201).json(newExperiences);
 });
 
 // PATCH /projects/:id - Actualizar un proyecto
-app.patch('/projects/:id', (req, res) => {
-const index = projects.findIndex(p => p.id === parseInt(req.params.id));
+app.patch('/experiences/:id', (req, res) => {
+const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
 
 if (index === -1) {
 return res.status(404).json({ error: 'Proyecto no encontrado' });
 }
 
-projects[index] = { ...projects[index], ...req.body };
-res.json(projects[index]);
+expriences[index] = { ...experiences[index], ...req.body };
+res.json(experiences[index]);
 });
 
 // DELETE /projects/:id - Eliminar un proyecto
-app.delete('/projects/:id', (req, res) => {
-const index = projects.findIndex(p => p.id === parseInt(req.params.id));
+app.delete('/experiences/:id', (req, res) => {
+const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
 
 if (index === -1) {
 return res.status(404).json({ error: 'Proyecto no encontrado' });
 }
 
-const deleted = projects.splice(index, 1);
-res.json({ message: 'Proyecto eliminado', project: deleted[0] });
+const deleted = experiences.splice(index, 1);
+res.json({ message: 'Proyecto eliminado', experiences: deleted[0] });
 });
 
 app.listen(PORT, () => {
