@@ -10,78 +10,81 @@ app.use(express.json());
 
 // Base de datos en memoria
 let experiences = [
-{ id: 1, company:'Apple', role:'Software Developer', endDate:'12/10/2019', tech:['Angular','Python','HTML'], highlights:['Developed responsive web interfaces using Angular and HTML', 'Built backend scripts in Python to automate internal processes', 'Collaborated with cross-functional teams to deliver scalable features']},
-{ id: 2, company:'Microsoft', role:'Backend Developer', endDate:'02/03/2021', tech:['Angular','Python','HTML', 'C'], highlights:['Designed RESTful APIs for internal services', 'Improved backend performance using optimized Python and C modules', 'Implemented secure data processing pipelines']},
-{ id: 3, company:'Samsung', role:'Programmer', endDate:'04/08/2023', tech:['Angular','Python','HTML', 'C', 'C++'], highlights:['Developed cross-platform applications using C++', 'Optimized system performance through low-level programming in C', 'Maintained and improved legacy codebases']},
-{ id: 4, company:'Tigo', role:'Frontend Developer', endDate:'06/08/2024', tech:['Angular','Python','HTML', 'C', 'C++', 'Javascript'], highlights:['Built dynamic user interfaces with Angular and JavaScript', 'Improved UI performance and responsiveness across devices', 'Integrated frontend applications with REST APIs']},
-{ id: 5, company:'Microsoft', role:'Programmer', endDate:'10/11/2025', tech:['Angular','Python','HTML', 'C', 'C++', 'Javascript', 'Bootstrap'], highlights:['Developed full-stack web applications using Angular and Bootstrap', 'Enhanced user experience through responsive design principles', 'Collaborated in agile teams to deliver scalable software solutions']},
+  { id: 1, company:'Apple', role:'Software Developer', endDate:'12/10/2019', tech:['Angular','Python','HTML'], highlights:['Developed responsive web interfaces using Angular and HTML', 'Built backend scripts in Python to automate internal processes', 'Collaborated with cross-functional teams to deliver scalable features']},
+  { id: 2, company:'Microsoft', role:'Backend Developer', endDate:'02/03/2021', tech:['Angular','Python','HTML', 'C'], highlights:['Designed RESTful APIs for internal services', 'Improved backend performance using optimized Python and C modules', 'Implemented secure data processing pipelines']},
+  { id: 3, company:'Samsung', role:'Programmer', endDate:'04/08/2023', tech:['Angular','Python','HTML', 'C', 'C++'], highlights:['Developed cross-platform applications using C++', 'Optimized system performance through low-level programming in C', 'Maintained and improved legacy codebases']},
+  { id: 4, company:'Tigo', role:'Frontend Developer', endDate:'06/08/2024', tech:['Angular','Python','HTML', 'C', 'C++', 'Javascript'], highlights:['Built dynamic user interfaces with Angular and JavaScript', 'Improved UI performance and responsiveness across devices', 'Integrated frontend applications with REST APIs']},
+  { id: 5, company:'Microsoft', role:'Programmer', endDate:'10/11/2025', tech:['Angular','Python','HTML', 'C', 'C++', 'Javascript', 'Bootstrap'], highlights:['Developed full-stack web applications using Angular and Bootstrap', 'Enhanced user experience through responsive design principles', 'Collaborated in agile teams to deliver scalable software solutions']},
 ];
 
-let nextId = 4;
+let nextId = 6;
 
 // GET / - Bienvenida
 app.get('/', (req, res) => {
-res.json({ message: 'Bienvenido a la API de Proyectos' });
+  res.json({ message: 'Bienvenido a la API de Experiences' });
 });
 
-// GET /projects - Ver todos los proyectos
+// GET Ver todas las experiences
 app.get('/experiences', (req, res) => {
-res.json(experiences);
+  res.json(experiences);
 });
 
-// GET /projects/:id - Ver un proyecto específico
+// GET Ver una experience específica
 app.get('/experiences/:id', (req, res) => {
-const experiences = experiences.find(p => p.id === parseInt(req.params.id));
+  const experience = experiences.find(p => p.id === parseInt(req.params.id));
 
-if (!experiences) {
-return res.status(404).json({ error: 'There is no experience' });
-}
+  if (!experience) {
+    return res.status(404).json({ error: 'There is no experience' });
+  }
 
-res.json(experiences);
+  res.json(experience);
 });
 
-// POST /projects - Crear un proyecto
+// POST Crear una experience
 app.post('/experiences', (req, res) => {
-const { name, stars } = req.body;
+  const { company, role, endDate, tech, highlights } = req.body;
 
-if (!name) {
-return res.status(400).json({ error: 'El campo "name" es requerido' });
-}
+  if (!company || !role) {
+    return res.status(400).json({ error: 'Los campos "company" y "role" son requeridos' });
+  }
 
-const newExperiences = {
-id: nextId++,
-name,
-stars: stars || 0,
-};
+  const newExperience = {
+    id: nextId++,
+    company,
+    role,
+    endDate: endDate || '',
+    tech: tech || [],
+    highlights: highlights || [],
+  };
 
-experiences.push(newExperiences);
-res.status(201).json(newExperiences);
+  experiences.push(newExperience);
+  res.status(201).json(newExperience);
 });
 
-// PATCH /projects/:id - Actualizar un proyecto
+// PATCH Actualizar una experience
 app.patch('/experiences/:id', (req, res) => {
-const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
+  const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
 
-if (index === -1) {
-return res.status(404).json({ error: 'Proyecto no encontrado' });
-}
+  if (index === -1) {
+    return res.status(404).json({ error: 'Experience no encontrada' });
+  }
 
-expriences[index] = { ...experiences[index], ...req.body };
-res.json(experiences[index]);
+  experiences[index] = { ...experiences[index], ...req.body };
+  res.json(experiences[index]);
 });
 
-// DELETE /projects/:id - Eliminar un proyecto
+// DELETE Eliminar una experience
 app.delete('/experiences/:id', (req, res) => {
-const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
+  const index = experiences.findIndex(p => p.id === parseInt(req.params.id));
 
-if (index === -1) {
-return res.status(404).json({ error: 'Proyecto no encontrado' });
-}
+  if (index === -1) {
+    return res.status(404).json({ error: 'Experience no encontrada' });
+  }
 
-const deleted = experiences.splice(index, 1);
-res.json({ message: 'Proyecto eliminado', experiences: deleted[0] });
+  const deleted = experiences.splice(index, 1);
+  res.json({ message: 'Experience eliminada', experience: deleted[0] });
 });
 
 app.listen(PORT, () => {
-console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
