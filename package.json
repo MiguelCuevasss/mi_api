@@ -9,7 +9,7 @@
   
     "scripts": {
       "dev" : "nodemon server.js",
-      "dev:projects":"nodemon projects.js"
+      "dev:experiences":"nodemon experiences.js"
     }
   
 }
